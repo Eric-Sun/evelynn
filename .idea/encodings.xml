@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
+    <file url="file://$PROJECT_DIR$/bin" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/assembly" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/j13/evelynn/core/config/PropertiesConfiguration.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/j13/evelynn/security/dao/AuthorityDAO.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/j13/evelynn/security/dao/ResourceDAO.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/j13/evelynn/security/dao/UserDAO.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/j13/evelynn/security/model/Authority.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/j13/evelynn/security/model/Resource.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/j13/evelynn/security/model/User.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/j13/evelynn/security/service/AdminUserDetails.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/j13/evelynn/security/service/AuthorityService.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/j13/evelynn/security/service/WebAccessDecisionManager.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/j13/evelynn/security/service/WebDaoAuthenticationProvider.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/j13/evelynn/security/service/WebFilterSecurityInterceptor.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/j13/evelynn/security/service/WebInvocationSecurityMetadataSourceService.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/j13/evelynn/security/service/WebUserDetailService.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/j13/evelynn/starter/JettyServer.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/j13/evelynn/starter/JettyServerConfig.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/j13/evelynn/starter/ServerStarter.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/spring-security.xml" charset="UTF-8" />
+  </component>
+</project>
