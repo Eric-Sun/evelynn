@@ -1,6 +1,6 @@
 package com.j13.evelynn.security.service;
 
-import com.j13.evelynn.security.dao.ResourceDAO;
+import com.j13.evelynn.net.AccountServerManager;
 import com.j13.evelynn.security.model.Authority;
 import com.j13.evelynn.security.model.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +21,12 @@ public class WebInvocationSecurityMetadataSourceService implements FilterInvocat
 
     private static Map<String, Collection<ConfigAttribute>> resourceMap = null;
     @Autowired
-    private ResourceDAO resourceDAO;
+    private AccountServerManager accountServerManager;
 
     private RequestMatcher requestMatcher;
 
-    public WebInvocationSecurityMetadataSourceService(ResourceDAO resourceDAO) {
-        this.resourceDAO = resourceDAO;
+    public WebInvocationSecurityMetadataSourceService(AccountServerManager accountServerManager) {
+        this.accountServerManager = accountServerManager;
         loadResourceDefine();
     }
 
@@ -37,11 +37,11 @@ public class WebInvocationSecurityMetadataSourceService implements FilterInvocat
      * 加载资源和权限的列表
      */
     private void loadResourceDefine() {
-        List<Resource> resourceList = resourceDAO.getResourceList();
+        List<Resource> resourceList = accountServerManager.getResourceList();
         resourceMap = new HashMap<String, Collection<ConfigAttribute>>();
         for (Resource resource : resourceList) {
             Collection<ConfigAttribute> attributes = new ArrayList<ConfigAttribute>();
-            List<Authority> authorityList = resourceDAO.getAuthorityListByResource(resource.getName());
+            List<Authority> authorityList = accountServerManager.getAuthorityListByResourceName(resource.getName());
             for (Authority authority : authorityList) {
                 ConfigAttribute ca = new SecurityConfig(authority.getName());
                 attributes.add(ca);
@@ -80,11 +80,11 @@ public class WebInvocationSecurityMetadataSourceService implements FilterInvocat
     }
 
 
-    public ResourceDAO getResourceDAO() {
-        return resourceDAO;
+    public AccountServerManager getAccountServerManager() {
+        return accountServerManager;
     }
 
-    public void setResourceDAO(ResourceDAO resourceDAO) {
-        this.resourceDAO = resourceDAO;
+    public void setAccountServerManager(AccountServerManager accountServerManager) {
+        this.accountServerManager = accountServerManager;
     }
 }

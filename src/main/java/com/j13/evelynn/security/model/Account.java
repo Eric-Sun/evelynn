@@ -7,12 +7,39 @@ package com.j13.evelynn.security.model;
  * Time: 下午2:54
  * To change this template use File | Settings | File Templates.
  */
-public class User {
+public class Account {
 
     private int id;
     private String name;
     private int authorityId;
     private String authorityName;
+    private String brief;
+    private String realName;
+    private String mobile;
+
+    public String getBrief() {
+        return brief;
+    }
+
+    public void setBrief(String brief) {
+        this.brief = brief;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
 
     public int getAuthorityId() {
         return authorityId;

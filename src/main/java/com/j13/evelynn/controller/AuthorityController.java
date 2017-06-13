@@ -1,9 +1,10 @@
 package com.j13.evelynn.controller;
 
+import com.j13.evelynn.net.AccountServerManager;
 import com.j13.evelynn.security.model.Authority;
 import com.j13.evelynn.security.model.Resource;
-import com.j13.evelynn.security.model.User;
-import com.j13.evelynn.security.service.AuthorityService;
+import com.j13.evelynn.security.model.Account;
+import com.j13.evelynn.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,62 +21,71 @@ import java.util.Map;
 public class AuthorityController {
 
     @Autowired
-    AuthorityService authorityService;
+    AccountServerManager accountServerManager;
 
 
-    @RequestMapping("/userList")
+    @RequestMapping("/accountList")
     public String userList(HttpServletRequest request, Map<String, Object> model) {
 
-        List<User> userList = authorityService.userList();
-        model.put("data", userList);
-        return "/authority/userList";
+        List<Account> accountList = accountServerManager.accountList();
+        model.put("data", accountList);
+        return "/authority/accountList";
     }
 
 
-    @RequestMapping("/userDetailForUpdate")
+    @RequestMapping("/accountDetailForUpdate")
     public String userDetailForUpdate(HttpServletRequest request, Map<String, Object> model) {
         int id = new Integer(request.getParameter("id"));
-        User user = authorityService.getUser(id);
-        List<Authority> authorityList = authorityService.listAuthority();
-        model.put("user", user);
+        Account account = accountServerManager.getAccount(id);
+        List<Authority> authorityList = accountServerManager.listAuthority();
+        model.put("account", account);
         model.put("authorityList", authorityList);
 
-        return "/authority/userDetailForUpdate";
+        return "/authority/accountDetailForUpdate";
     }
 
-    @RequestMapping("/userPreCreate")
+    @RequestMapping("/accountPreCreate")
     public String preCreate(HttpServletRequest request, Map<String, Object> model) {
-        List<Authority> authorityList = authorityService.listAuthority();
+        List<Authority> authorityList = accountServerManager.listAuthority();
         model.put("authorityList", authorityList);
-        return "/authority/userCreate";
+        return "/authority/accountCreate";
     }
 
-    @RequestMapping("/userCreate")
+    @RequestMapping("/accountCreate")
     public String userCreate(HttpServletRequest request, Map<String, Object> model) {
         String name = request.getParameter("name");
+        String password = request.getParameter("password");
         int authorityId = new Integer(request.getParameter("authorityId"));
+        String brief = request.getParameter("brief");
+        String mobile = request.getParameter("mobile");
+        String realName = request.getParameter("realName");
 
-        authorityService.createUser(name, authorityId);
-        return "redirect:/authority/userList";
+        String passwordAfterMd5 = MD5Util.getMD5String(password);
+        accountServerManager.createAccount(name, passwordAfterMd5, authorityId, brief, mobile, realName);
+
+        return "redirect:/authority/accountList";
     }
 
 
-    @RequestMapping("/userUpdate")
+    @RequestMapping("/accountUpdate")
     public String userUpdate(HttpServletRequest request, Map<String, Object> model) {
         int id = new Integer(request.getParameter("id"));
         String name = request.getParameter("name");
+        String password = request.getParameter("password");
         int authorityId = new Integer(request.getParameter("authorityId"));
-
-        authorityService.userUpdate(id, name, authorityId);
-        return "redirect:/authority/userList";
+        String brief = request.getParameter("brief");
+        String mobile = request.getParameter("mobile");
+        String realName = request.getParameter("realName");
+        accountServerManager.updateAccount(id, name, password, authorityId, brief, mobile, realName);
+        return "redirect:/authority/accountList";
     }
 
-    @RequestMapping("/userDelete")
+    @RequestMapping("/accountDelete")
     public String userDelete(HttpServletRequest request, Map<String, Object> model) {
         int id = new Integer(request.getParameter("id"));
-        authorityService.deleteUser(id);
+        accountServerManager.deleteAccount(id);
 
-        return "redirect:/authority/userList";
+        return "redirect:/authority/accountList";
     }
 
 
@@ -83,7 +93,7 @@ public class AuthorityController {
 
     @RequestMapping("/authorityList")
     public String authorityList(HttpServletRequest request, Map<String, Object> model) {
-        List<Authority> authorityList = authorityService.listAuthority();
+        List<Authority> authorityList = accountServerManager.listAuthority();
         model.put("authorityList", authorityList);
         return "/authority/authorityList";
     }
@@ -93,8 +103,8 @@ public class AuthorityController {
     public String authorityDetailForUpdate(HttpServletRequest request, Map<String, Object> model) {
         int id = new Integer(request.getParameter("id"));
 
-        Authority authority = authorityService.getAuthority(id);
-        List<Resource> resourceList = authorityService.getResouceList();
+        Authority authority = accountServerManager.getAuthority(id);
+        List<Resource> resourceList = accountServerManager.getResourceList();
         model.put("authority", authority);
         model.put("resourceList", resourceList);
         return "/authority/authorityDetailForUpdate";
@@ -108,7 +118,7 @@ public class AuthorityController {
         String[] resourceIdList = request.getParameterValues("resourceIdList");
 
 
-        authorityService.updateAuthority(id, name, resourceIdList);
+        accountServerManager.updateAuthority(id, name, resourceIdList);
         return "redirect:/authority/authorityList";
     }
 
@@ -116,7 +126,7 @@ public class AuthorityController {
     @RequestMapping("/authorityDelete")
     public String authorityDelete(HttpServletRequest request) {
         int id = new Integer(request.getParameter("id"));
-        authorityService.deleteAuthority(id);
+        accountServerManager.deleteAuthority(id);
         return "redirect:/authority/authorityList";
     }
 
@@ -125,7 +135,7 @@ public class AuthorityController {
         String name = request.getParameter("name");
         String[] resourceIdList = request.getParameterValues("resourceIdList");
 
-        authorityService.createAuthority(name, resourceIdList);
+        accountServerManager.createAuthority(name, resourceIdList);
         return "redirect:/authority/authorityList";
     }
 
@@ -134,7 +144,7 @@ public class AuthorityController {
     public String authorityPreCreate(HttpServletRequest request, Map<String, Object> model) {
 
 
-        List<Resource> resourceList = authorityService.getResouceList();
+        List<Resource> resourceList = accountServerManager.getResourceList();
         model.put("resourceList", resourceList);
 
         return "/authority/authorityCreate";
@@ -146,7 +156,7 @@ public class AuthorityController {
     @RequestMapping("/resourceList")
     public String resourceList(HttpServletRequest request, Map<String, Object> model) {
 
-        List<Resource> resourceList = authorityService.getResouceList();
+        List<Resource> resourceList = accountServerManager.getResourceList();
         model.put("resourceList", resourceList);
         return "/authority/resourceList";
     }
@@ -155,7 +165,7 @@ public class AuthorityController {
     @RequestMapping("/resourceCreate")
     public String resourceCreate(HttpServletRequest request) {
         String name = request.getParameter("name");
-        authorityService.createResource(name);
+        accountServerManager.createResource(name);
         return "redirect:/authority/resourceList";
     }
 
@@ -164,7 +174,7 @@ public class AuthorityController {
     public String resourceUpdate(HttpServletRequest request) {
         String name = request.getParameter("name");
         int id = new Integer(request.getParameter("id"));
-        authorityService.updateResource(id, name);
+        accountServerManager.updateResource(id, name);
         return "redirect:/authority/resourceList";
     }
 
@@ -172,7 +182,7 @@ public class AuthorityController {
     @RequestMapping("/resourceDelete")
     public String resourceDelete(HttpServletRequest request) {
         int id = new Integer(request.getParameter("id"));
-        authorityService.deleteResource(id);
+        accountServerManager.deleteResource(id);
         return "redirect:/authority/resourceList";
     }
 
@@ -181,7 +191,7 @@ public class AuthorityController {
     public String resourceDetailForUpdate(HttpServletRequest request, Map<String, Object> model) {
         int id = new Integer(request.getParameter("id"));
 
-        Resource resource = authorityService.getResource(id);
+        Resource resource = accountServerManager.getResource(id);
         model.put("resource", resource);
         return "/authority/resourceDetailForUpdate";
     }

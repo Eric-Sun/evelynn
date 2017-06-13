@@ -4,20 +4,24 @@
         <div class="col-md-9">
             <div class="box box-primary">
                 <div class="box-body">
-                    <form action="/authority/userUpdate" method="post">
+                    <form action="/authority/accountUpdate" method="post">
                         <div class="input-group margin">
 
                             <div class="form-group form-inline">
                                 <label>用户id</label>
-                                <input type="text" class="form-control" name="id" value="${user.id}"/>
+                                <input type="text" class="form-control" name="id" value="${account.id}"/>
+                            </div>
+                            <div class="form-group form-inline">
+                                <label>新密码</label>
+                                <input type="text" class="form-control" name="password"/>
                             </div>
                             <div class="form-group form-inline">
                                 <label>用户名称</label>
-                                <input type="text" class="form-control" name="name" value="${user.name}"/>
+                                <input type="text" class="form-control" name="name" value="${account.name}"/>
                             </div>
                             <div class="form-group">
                                 <label>角色</label>
-                                <select class="form-control" name="authorityId">
+                                <select id="authList" class="form-control" name="authorityId">
                                     <#list authorityList as item>
                                         <option value="${item.id}"
                                             <#if user.authorityId== item.id>
@@ -29,6 +33,20 @@
 
 
                                 </select>
+                            </div>
+                            <div id="painter_info">
+                                <div class="form-group form-inline">
+                                    <label>画师简介</label>
+                                    <input type="text" class="form-control" name="brief" value="${account.brief}"/>
+                                </div>
+                                <div class="form-group form-inline">
+                                    <label>画师电话</label>
+                                    <input type="text" class="form-control" name="mobile" value="${account.mobile}"/>
+                                </div>
+                                <div class="form-group form-inline">
+                                    <label>画师姓名</label>
+                                    <input type="text" class="form-control" name="realName" value="${account.realName}"/>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-primary"
@@ -52,4 +70,18 @@
                 ;
             }
     );
+
+    if ($("#authList").val() == 1) {
+        $("#painter_info").show();
+    } else {
+        $("#painter_info").hide();
+    }
+    $("#authList").change(function () {
+        if ($("#authList").val() == 1) {
+            $("#painter_info").show()
+        } else {
+            $("#painter_info").hide();
+        }
+    });
+
 </script>

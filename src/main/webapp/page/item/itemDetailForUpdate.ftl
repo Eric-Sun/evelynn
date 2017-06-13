@@ -1,32 +1,27 @@
 <#import "layouts/layout.ftl" as layout />
 <@layout.mainLayout>
-<aside class="right-side">
     <section class="content">
         <div class="col-md-9">
             <div class="box box-primary">
                 <div class="box-body">
-                    <form action="/authority/userCreate" method="post">
+                    <form action="/item/itemUpdate" method="post">
                         <div class="input-group margin">
 
                             <div class="form-group form-inline">
-                                <label>用户名称</label>
-                                <input type="text" class="form-control" name="name" value="${user.name}"/>
+                                <label>商品id</label>
+                                <input type="text" class="form-control" name="id" value="${item.id}"/>
                             </div>
-                            <div class="form-group">
-                                <label>角色</label>
-                                <select class="form-control" name="authorityId">
-                                    <#list authorityList as item>
-                                        <option value="${item.id}"
-                                                >${item.name}
-                                        </option>
-                                    </#list>
-
-
-                                </select>
+                            <div class="form-group form-inline">
+                                <label>商品名称</label>
+                                <input type="text" class="form-control" name="name" value="${item.name}"/>
+                            </div>
+                            <div class="form-group form-inline">
+                                <label>商品价格</label>
+                                <input type="text" class="form-control" name="price" value="${item.price}"/>
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-primary"
-                                        onclick="this.parentNode.submit(); return false;">创建新账户
+                                        onclick="this.parentNode.submit(); return false;">更新角色
                                 </button>
                             </div>
                         </div>
@@ -37,7 +32,6 @@
         </div>
         </div>
     </section>
-</aside>
 </@layout.mainLayout>
 <script type="text/javascript">
     $(function () {

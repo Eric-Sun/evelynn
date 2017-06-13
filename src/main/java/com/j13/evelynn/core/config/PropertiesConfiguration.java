@@ -17,6 +17,7 @@ public class PropertiesConfiguration {
     public static PropertiesConfiguration getInstance() {
         if(config == null) {
             config = new PropertiesConfiguration();
+            config.addResource("/admin-core.properties");
         }
 
         return config;

@@ -16,11 +16,11 @@ import javax.servlet.ServletContextListener;
 public class BaseListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        try {
-            PropertiesConfiguration.getInstance().addResource("/admin-core.properties");
-        } catch (AdminException e) {
-            e.printStackTrace();
-        }
+//        try {
+//        PropertiesConfiguration.getInstance().addResource("/admin-core.properties");
+//    } catch (AdminException e) {
+//        e.printStackTrace();
+//    }
     }
 
     @Override

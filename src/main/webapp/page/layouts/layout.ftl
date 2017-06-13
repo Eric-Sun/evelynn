@@ -251,28 +251,38 @@ desired effect
                 <!-- Optionally, you can add icons to the links -->
                 <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
                 <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-                <li class="treeview">
-                    <a href="#"><i class="fa fa-link"></i> <span>内容管理</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="/dz/list">段子管理</a></li>
-                        <li><a href="#">Link in level 2</a></li>
-                    </ul>
-                </li>
+                <#--<li class="treeview">-->
+                    <#--<a href="#"><i class="fa fa-link"></i> <span>内容管理</span>-->
+            <#--<span class="pull-right-container">-->
+              <#--<i class="fa fa-angle-left pull-right"></i>-->
+            <#--</span>-->
+                    <#--</a>-->
+                    <#--<ul class="treeview-menu">-->
+                        <#--<li><a href="/dz/list">段子管理</a></li>-->
+                        <#--<li><a href="#">Link in level 2</a></li>-->
+                    <#--</ul>-->
+                <#--</li>-->
 
                 <li class="treeview">
-                    <a href="#"><i class="fa fa-link"></i> <span>权限管理</span>
+            <a href="#"><i class="fa fa-link"></i> <span>权限管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+            </a>
+            <ul class="treeview-menu">
+                <li><a href="/authority/accountList">用户管理</a></li>
+                <li><a href="/authority/authorityList">角色管理</a></li>
+                <li><a href="/authority/resourceList">资源管理</a></li>
+            </ul>
+        </li>
+                <li class="treeview">
+                    <a href="#"><i class="fa fa-link"></i> <span>商品管理</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="/authority/userList">用户管理</a></li>
-                        <li><a href="/authority/authorityList">角色管理</a></li>
-                        <li><a href="/authority/resourceList">资源管理</a></li>
+                        <li><a href="/item/itemList">商品列表</a></li>
                     </ul>
                 </li>
             </ul>
@@ -413,6 +423,8 @@ desired effect
 <script src="/static/dist/js/app.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="/static/dist/js/demo.js"></script>
+<script src="/static/dist/js/vue.min.js"></script>
+<script src="/static/dist/js/tools.js"></script>
 
 <!-- Optionally, you can add Slimscroll and FastClick plugins.
      Both of these plugins are recommended to enhance the

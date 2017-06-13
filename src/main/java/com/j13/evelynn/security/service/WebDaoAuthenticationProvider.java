@@ -1,6 +1,6 @@
 package com.j13.evelynn.security.service;
 
-import com.j13.evelynn.security.dao.UserDAO;
+import com.j13.evelynn.net.AccountServerManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class WebDaoAuthenticationProvider extends DaoAuthenticationProvider {
 
     @Autowired
-    private UserDAO userDAO;
+    private AccountServerManager accountServerManager;
 
     /**
      * 重新此方法，写第三方登陆校验
@@ -41,7 +41,7 @@ public class WebDaoAuthenticationProvider extends DaoAuthenticationProvider {
     }
 
     private boolean check(String username, String password) {
-        return userDAO.login(username, password) != null ? true : false;
+        return accountServerManager.checkExisted(username, password);
     }
 
 }

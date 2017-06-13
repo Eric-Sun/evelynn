@@ -44,7 +44,7 @@
     <!-- 资源源数据定义，即定义某一资源可以被哪些角色访问 -->
     <bean id="securityMetadataSource"
           class="com.j13.evelynn.security.service.WebInvocationSecurityMetadataSourceService">
-        <constructor-arg name="resourceDAO" ref="resourceDAO">
+        <constructor-arg name="accountServerManager" ref="accountServerManager">
         </constructor-arg>
 
     </bean>
@@ -53,5 +53,8 @@
     <bean id="daoAuthenticationProvider" class="com.j13.evelynn.security.service.WebDaoAuthenticationProvider">
         <property name="userDetailsService" ref="userDetailsService"></property>
     </bean>
+
+    <!--<bean id="accountServerManager" class="com.j13.evelynn.net.AccountServerManager">-->
+    <!--</bean>-->
 
 </beans>

@@ -2,17 +2,22 @@ package com.j13.evelynn.util;
 
 import com.google.common.collect.Lists;
 import com.j13.evelynn.core.AdminException;
+import com.j13.evelynn.net.RequestParams;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -52,8 +57,12 @@ public class InternetUtil {
         }
     }
 
+    public static String post(String url, RequestParams p) {
+        return InternetUtil.post(url, p.end());
+    }
 
-    public static String post(String url, Map<String, String> params) throws AdminException {
+
+    public static String post(String url, Map<String, Object> params) throws AdminException {
         CloseableHttpClient httpclient = HttpClients.createDefault();
         CloseableHttpResponse response = null;
         try {
@@ -62,7 +71,8 @@ public class InternetUtil {
 
             Set<String> keySet = params.keySet();
             for (String key : keySet) {
-                nvps.add(new BasicNameValuePair(key, params.get(key)));
+                if (params.get(key) != null)
+                    nvps.add(new BasicNameValuePair(key, params.get(key).toString()));
             }
 
 
@@ -93,5 +103,51 @@ public class InternetUtil {
             }
         }
     }
+
+    public static String post(String url, RequestParams p, String fileKey, File file) {
+        return InternetUtil.post(url, p.end(), fileKey, file);
+    }
+
+    public static String post(String url, Map<String, Object> params, String fileKey, File file) throws AdminException {
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        CloseableHttpResponse response = null;
+        try {
+            HttpPost httpPost = new HttpPost(url);
+            FileBody fb = new FileBody(file);
+
+            MultipartEntity reqEntity = new MultipartEntity();
+            reqEntity.addPart(fileKey, fb);
+            Set<String> keySet = params.keySet();
+            for (String key : keySet) {
+                if (params.get(key) != null)
+                    reqEntity.addPart(key, new StringBody(params.get(key).toString()));
+            }
+
+            httpPost.setEntity(reqEntity);
+
+            response = httpclient.execute(httpPost);
+            HttpEntity entity = response.getEntity();
+            String rawResponse = EntityUtils.toString(entity);
+            return rawResponse;
+        } catch (IOException e) {
+            throw new AdminException("http error. Url=" + url, e);
+        } finally {
+
+            if (response != null) {
+                try {
+                    response.close();
+                } catch (IOException e) {
+                    throw new AdminException("http error. Url=" + url, e);
+                }
+
+            }
+            try {
+                httpclient.close();
+            } catch (IOException e) {
+                throw new AdminException("http error. Url=" + url, e);
+            }
+        }
+    }
+
 
 }
