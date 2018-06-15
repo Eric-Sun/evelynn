@@ -6,8 +6,7 @@ import com.google.common.collect.Maps;
 import com.j13.evelynn.core.AdminConstants;
 import com.j13.evelynn.core.Constants;
 import com.j13.evelynn.core.config.PropertiesConfiguration;
-import com.j13.evelynn.net.OrderServerManager;
-import com.j13.evelynn.vo.ItemVO;
+import com.j13.evelynn.net.AdminOrderServerManager;
 import com.j13.evelynn.vo.OrderStatusVO;
 import com.j13.evelynn.vo.OrderVO;
 import org.apache.commons.io.FileUtils;
@@ -29,12 +28,12 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/order")
-public class OrderController {
+@RequestMapping("/admin/order")
+public class AdminOrderController {
     private static int SIZE_PER_PAGE = 20;
 
     @Autowired
-    OrderServerManager orderServerManager;
+    AdminOrderServerManager adminOrderServerManager;
 
 
     @RequestMapping("/orderUpdateStatus")
@@ -42,13 +41,13 @@ public class OrderController {
     public String itemUpdate(HttpServletRequest request, Map<String, Object> model) {
         int id = new Integer(request.getParameter("id"));
         int status = new Integer(request.getParameter("status"));
-        orderServerManager.updateStatus(id, status);
+        adminOrderServerManager.updateStatus(id, status);
         return "{}";
     }
 
     @RequestMapping("/orderList")
-    @ResponseBody
-    public String orderList(HttpServletRequest request) {
+     @ResponseBody
+     public String orderList(HttpServletRequest request) {
         Map<String, Object> model = Maps.newHashMap();
         int pageNum = 0;
         if (request.getParameter("pageNum") != null)
@@ -57,11 +56,12 @@ public class OrderController {
         if (request.getParameter("status") != null) {
             status = new Integer(request.getParameter("status"));
         }
-        List<OrderVO> orderList = orderServerManager.list(pageNum, SIZE_PER_PAGE, status);
+        List<OrderVO> orderList = adminOrderServerManager.list(pageNum, SIZE_PER_PAGE, status);
 
         model.put("orderList", orderList);
         return JSON.toJSONString(model);
     }
+
 
     @RequestMapping("download")
     public ResponseEntity<byte[]> download(HttpServletRequest request) throws IOException {
@@ -97,44 +97,29 @@ public class OrderController {
 
     @RequestMapping("/orderListPG")
     public String orderListPG() {
-        return "/order/orderList";
+        return "/admin/order/orderList";
     }
 
     @RequestMapping("/orderCreatePG")
     public String orderCreatePG() {
-        return "/order/orderCreate";
+        return "/admin/order/orderCreate";
     }
 
-    //    @RequestMapping("/itemDetailForUpdate")
-//    public String itemDetailForUpdate(HttpServletRequest request, Map<String, Object> model) {
-//        int id = new Integer(request.getParameter("id"));
-//        ItemVO item = itemServerManager.get(id);
-//        model.put("item", item);
-//
-//        return "/item/itemDetailForUpdate";
-//    }
-//
-//    @RequestMapping("/itemPreCreate")
-//    public String itemPreCreate(HttpServletRequest request, Map<String, Object> model) {
-//        return "/item/itemCreate";
-//    }
-//
-//
     @RequestMapping("/orderCreate")
     public String orderCreate(@RequestParam(value = "img", required = false) MultipartFile file,
                               HttpServletRequest request, Map<String, Object> model) throws IOException {
         String contactMobile = request.getParameter("contactMobile");
         String itemId = request.getParameter("itemId");
         float price = new Float(request.getParameter("finalPrice"));
-        orderServerManager.add(file, contactMobile, itemId, price, -1);
-        return "redirect:/order/orderList";
+        adminOrderServerManager.add(file, contactMobile, itemId, price, 0);
+        return "/admin/order/orderList";
     }
 
 
-//    @RequestMapping("/itemDelete")
-//    public String itemDelete(HttpServletRequest request, Map<String, Object> model) {
-//        int id = new Integer(request.getParameter("id"));
-//        itemServerManager.delete(id);
-//        return "redirect:/item/itemList";
-//    }
+    @RequestMapping("/orderDelete")
+    public String orderDelete(HttpServletRequest request, Map<String, Object> model) {
+        int id = new Integer(request.getParameter("id"));
+        adminOrderServerManager.delete(id);
+        return "/admin/order/orderList";
+    }
 }

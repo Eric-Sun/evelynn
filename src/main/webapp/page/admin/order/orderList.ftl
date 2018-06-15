@@ -48,7 +48,7 @@
                         </td>
                         <td>
                             <button class="btn btn-info btn-sm right"
-                                    onclick="javascript:location.href='/item/itemDelete?id=${item.id}'">
+                                    onclick="javascript:location.href='/order/orderDelete?id=${item.id}'">
                                 删除
                             </button>
                         </td>
@@ -129,7 +129,7 @@
                 created: function () {
                     var _self = this;
                     $.ajax({
-                        url: "/order/orderStatusList",
+                        url: "/admin/order/orderStatusList",
                         dataType: 'json',
                         success: function (data) {
                             _self.statusList = data;
@@ -142,7 +142,7 @@
                         var orderId = this.order.id;
                         var status = $("#statusSelector").val();
                         $.ajax({
-                            url: "/order/orderUpdateStatus?id=" + orderId + "&status=" + status,
+                            url: "/admin/order/orderUpdateStatus?id=" + orderId + "&status=" + status,
                             dataType: 'json',
                             success: function (data) {
                                 tb.$options.methods.reload();
@@ -181,7 +181,7 @@
                 created: function () {
                     var _self = this;
                     $.ajax({
-                        url: "/order/orderList",
+                        url: "/admin/order/orderList",
                         dataType: 'json',
                         success: function (data) {
                             _self.orderList = data.orderList;
@@ -196,7 +196,7 @@
                     },
                     reload: function () {
                         $.ajax({
-                            url: "/order/orderList",
+                            url: "/admin/order/orderList",
                             dataType: 'json',
                             success: function (data) {
                                 tb.$data.orderList = data.orderList;

@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/item")
-public class ItemController {
+@RequestMapping("/admin/item")
+public class AdminItemController {
 
     @Autowired
     ItemServerManager itemServerManager;
@@ -28,14 +28,14 @@ public class ItemController {
         String name = request.getParameter("name");
         float price = new Float(request.getParameter("price"));
         itemServerManager.update(id, name, price);
-        return "redirect:/item/itemList";
+        return "redirect:/admin/item/itemList";
     }
 
     @RequestMapping("/itemList")
     public String itemList(HttpServletRequest request, Map<String, Object> model) {
         List<ItemVO> itemList = itemServerManager.list();
         model.put("itemList", itemList);
-        return "/item/itemList";
+        return "/admin/item/itemList";
     }
 
     @RequestMapping("/list")
@@ -52,7 +52,7 @@ public class ItemController {
         ItemVO item = itemServerManager.get(id);
         model.put("item", item);
 
-        return "/item/itemDetailForUpdate";
+        return "/admin/item/itemDetailForUpdate";
     }
 
     @RequestMapping("/itemPreCreate")

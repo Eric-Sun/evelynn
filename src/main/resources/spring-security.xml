@@ -1,60 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:security="http://www.springframework.org/schema/security"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/security
-       http://www.springframework.org/schema/security/spring-security.xsd">
+<beans:beans
+        xmlns="http://www.springframework.org/schema/security"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:beans="http://www.springframework.org/schema/beans"
+        xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+    <http pattern="/static/**" security="none"/>
 
-    <security:http pattern="/login" security="none"/>
-    <security:http pattern="/static/**" security="none"/>
+    <http use-expressions="true" auto-config="true">
 
-    <!-- http安全配置 -->
-    <security:http auto-config="true">
-        <security:form-login login-page="/login" default-target-url="/index/"/>
-        <security:logout logout-success-url="/login"/>
-        <security:custom-filter ref="myFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
+        <intercept-url pattern="/" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+        <form-login login-processing-url="/j_spring_security_check"
+                    login-page="/login"
+                    username-parameter="j_username"
+                    password-parameter="j_password"
+                    default-target-url='/index' always-use-default-target="true"/>
+        <logout logout-url="/j_spring_security_logout" logout-success-url="/login"/>
+        <csrf disabled="true"/>
 
-    </security:http>
+        <custom-filter ref="myFilter" before="FILTER_SECURITY_INTERCEPTOR"></custom-filter>
+    </http>
 
-    <bean id="myFilter" class="com.j13.evelynn.security.service.WebFilterSecurityInterceptor">
-        <property name="authenticationManager"
+
+    <beans:bean id="myFilter" class="com.j13.evelynn.security.service.WebFilterSecurityInterceptor">
+        <beans:property name="authenticationManager"
                   ref="authManager"/>
-        <property name="accessDecisionManager"
+        <beans:property name="accessDecisionManager"
                   ref="myAccessDecisionManagerBean"/>
-        <property name="securityMetadataSource"
+        <beans:property name="securityMetadataSource"
                   ref="securityMetadataSource"/>
-    </bean>
+    </beans:bean>
+    <authentication-manager alias="authManager">
+        <authentication-provider ref="daoAuthenticationProvider"/>
+    </authentication-manager>
 
-    <security:authentication-manager alias="authManager">
-        <security:authentication-provider ref="daoAuthenticationProvider"></security:authentication-provider>
-    </security:authentication-manager>
 
-
-    <bean id="userDetailsService"
+    <beans:bean id="userDetailsService"
           class="com.j13.evelynn.security.service.WebUserDetailService">
-    </bean>
+    </beans:bean>
 
     <!-- 访问决策器，决定某个用户具有的角色，是否有足够的权限去访问某个资源 -->
-    <bean id="myAccessDecisionManagerBean"
+    <beans:bean id="myAccessDecisionManagerBean"
           class="com.j13.evelynn.security.service.WebAccessDecisionManager">
-    </bean>
+    </beans:bean>
 
     <!-- 资源源数据定义，即定义某一资源可以被哪些角色访问 -->
-    <bean id="securityMetadataSource"
+    <beans:bean id="securityMetadataSource"
           class="com.j13.evelynn.security.service.WebInvocationSecurityMetadataSourceService">
-        <constructor-arg name="accountServerManager" ref="accountServerManager">
-        </constructor-arg>
+        <beans:constructor-arg name="accountServerManager" ref="accountServerManager">
+        </beans:constructor-arg>
 
-    </bean>
+    </beans:bean>
 
     <!--自定义验证密码-->
-    <bean id="daoAuthenticationProvider" class="com.j13.evelynn.security.service.WebDaoAuthenticationProvider">
-        <property name="userDetailsService" ref="userDetailsService"></property>
-    </bean>
+    <beans:bean id="daoAuthenticationProvider" class="com.j13.evelynn.security.service.WebDaoAuthenticationProvider">
+        <beans:property name="userDetailsService" ref="userDetailsService"></beans:property>
+    </beans:bean>
 
     <!--<bean id="accountServerManager" class="com.j13.evelynn.net.AccountServerManager">-->
     <!--</bean>-->
 
-</beans>
+</beans:beans>

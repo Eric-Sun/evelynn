@@ -23,7 +23,7 @@ public class WebDaoAuthenticationProvider extends DaoAuthenticationProvider {
             logger.debug("Authentication failed: no credentials provided");
 
             throw new BadCredentialsException(messages.getMessage(
-                    "AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"), userDetails);
+                    "AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
         }
 
         String username = userDetails.getUsername();
@@ -35,7 +35,7 @@ public class WebDaoAuthenticationProvider extends DaoAuthenticationProvider {
             logger.debug("Authentication failed: no credentials provided");
 
             throw new BadCredentialsException(messages.getMessage(
-                    "AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"), userDetails);
+                    "AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
         }
 
     }

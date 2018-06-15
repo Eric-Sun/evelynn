@@ -17,8 +17,8 @@ import java.util.Map;
  * Created by sunbo on 14-11-16.
  */
 @Controller
-@RequestMapping("/authority")
-public class AuthorityController {
+@RequestMapping("/admin/authority")
+public class AdminAuthorityController {
 
     @Autowired
     AccountServerManager accountServerManager;
@@ -29,7 +29,7 @@ public class AuthorityController {
 
         List<Account> accountList = accountServerManager.accountList();
         model.put("data", accountList);
-        return "/authority/accountList";
+        return "/admin/authority/accountList";
     }
 
 

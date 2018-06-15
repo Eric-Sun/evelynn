@@ -1,5 +1,6 @@
 <#setting number_format="#">
 <#macro mainLayout>
+<#assign sec= JspTaglibs["/WEB-INF/security.tld"]/>
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
@@ -214,7 +215,7 @@ desired effect
                                     <a href="#" class="btn btn-default btn-flat">Profile</a>
                                 </div>
                                 <div class="pull-right">
-                                    <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                                    <a href="/j_spring_security_logout" class="btn btn-default btn-flat">Sign out</a>
                                 </div>
                             </li>
                         </ul>
@@ -251,30 +252,36 @@ desired effect
                 <!-- Optionally, you can add icons to the links -->
                 <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
                 <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-                <#--<li class="treeview">-->
-                    <#--<a href="#"><i class="fa fa-link"></i> <span>内容管理</span>-->
+            <#--<li class="treeview">-->
+            <#--<a href="#"><i class="fa fa-link"></i> <span>内容管理</span>-->
             <#--<span class="pull-right-container">-->
-              <#--<i class="fa fa-angle-left pull-right"></i>-->
+            <#--<i class="fa fa-angle-left pull-right"></i>-->
             <#--</span>-->
-                    <#--</a>-->
-                    <#--<ul class="treeview-menu">-->
-                        <#--<li><a href="/dz/list">段子管理</a></li>-->
-                        <#--<li><a href="#">Link in level 2</a></li>-->
-                    <#--</ul>-->
-                <#--</li>-->
+            <#--</a>-->
+            <#--<ul class="treeview-menu">-->
+            <#--<li><a href="/dz/list">段子管理</a></li>-->
+            <#--<li><a href="#">Link in level 2</a></li>-->
+            <#--</ul>-->
+            <#--</li>-->
 
                 <li class="treeview">
-            <a href="#"><i class="fa fa-link"></i> <span>权限管理</span>
+                    <a href="#"><i class="fa fa-link"></i> <span>权限管理
+
+                                                <@sec.authorize access="hasAuthority('aa')">
+                                                    有aa的权限，此用户应该是222
+                                                </@sec.authorize>
+
+                    </span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
-            </a>
-            <ul class="treeview-menu">
-                <li><a href="/authority/accountList">用户管理</a></li>
-                <li><a href="/authority/authorityList">角色管理</a></li>
-                <li><a href="/authority/resourceList">资源管理</a></li>
-            </ul>
-        </li>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="/admin/authority/accountList">用户管理</a></li>
+                        <li><a href="/admin/authority/authorityList">角色管理</a></li>
+                        <li><a href="/admin/authority/resourceList">资源管理</a></li>
+                    </ul>
+                </li>
                 <li class="treeview">
                     <a href="#"><i class="fa fa-link"></i> <span>商品管理</span>
             <span class="pull-right-container">
@@ -282,7 +289,22 @@ desired effect
             </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="/item/itemList">商品列表</a></li>
+                        <li><a href="/admin/item/itemList">商品列表
+
+                        </a></li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="#"><i class="fa fa-link"></i> <span>订单管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="/admin/order/orderListPG">Admin订单列表</a></li>
+                    </ul>
+                    <ul class="treeview-menu">
+                        <li><a href="/painter/order/orderListPG">画家订单列表</a></li>
                     </ul>
                 </li>
             </ul>

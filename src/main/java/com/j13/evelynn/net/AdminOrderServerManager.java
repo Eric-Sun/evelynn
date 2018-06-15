@@ -8,6 +8,7 @@ import com.j13.evelynn.core.config.PropertiesConfiguration;
 import com.j13.evelynn.util.ImgUtil;
 import com.j13.evelynn.util.InternetUtil;
 import com.j13.evelynn.vo.OrderVO;
+import com.j13.garen.facade.req.OrderDeleteReq;
 import com.j13.garen.facade.req.OrderUpdateStatusReq;
 import com.j13.garen.facade.resp.OrderAddResp;
 import com.j13.garen.facade.resp.OrderGetResp;
@@ -25,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class OrderServerManager extends BaseServerManager {
+public class AdminOrderServerManager extends BaseServerManager {
 
     private static int ALL_STATUS = -1;
 
@@ -79,5 +80,14 @@ public class OrderServerManager extends BaseServerManager {
                         .add("orderId", id)
                         .add("status", status));
         OrderUpdateStatusReq resp = JSON.parseObject(rawResponse, OrderUpdateStatusReq.class);
+    }
+
+    public void delete(int id) {
+        String rawResponse = InternetUtil.post(
+                getServerUrl(),
+                RequestParams.getInstance()
+                        .add("act", "order.delete")
+                        .add("orderId", id));
+        CommonResultResp resp = JSON.parseObject(rawResponse, CommonResultResp.class);
     }
 }
