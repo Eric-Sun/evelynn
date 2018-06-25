@@ -35,16 +35,6 @@ public class AdminOrderController {
     @Autowired
     AdminOrderServerManager adminOrderServerManager;
 
-
-    @RequestMapping("/orderUpdateStatus")
-    @ResponseBody
-    public String itemUpdate(HttpServletRequest request, Map<String, Object> model) {
-        int id = new Integer(request.getParameter("id"));
-        int status = new Integer(request.getParameter("status"));
-        adminOrderServerManager.updateStatus(id, status);
-        return "{}";
-    }
-
     @RequestMapping("/orderList")
      @ResponseBody
      public String orderList(HttpServletRequest request) {

@@ -446,6 +446,8 @@ desired effect
 <!-- AdminLTE for demo purposes -->
 <script src="/static/dist/js/demo.js"></script>
 <script src="/static/dist/js/vue.min.js"></script>
+<script src="/static/dist/js/vue-router.js"></script>
+<script src="/static/dist/js/utils.js"></script>
 <script src="/static/dist/js/tools.js"></script>
 
 <!-- Optionally, you can add Slimscroll and FastClick plugins.

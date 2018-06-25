@@ -8,13 +8,13 @@ import com.j13.evelynn.core.config.PropertiesConfiguration;
 import com.j13.evelynn.util.ImgUtil;
 import com.j13.evelynn.util.InternetUtil;
 import com.j13.evelynn.vo.OrderVO;
-import com.j13.garen.facade.req.OrderDeleteReq;
-import com.j13.garen.facade.req.OrderUpdateStatusReq;
-import com.j13.garen.facade.resp.OrderAddResp;
-import com.j13.garen.facade.resp.OrderGetResp;
-import com.j13.garen.facade.resp.OrderListResp;
-import com.j13.garen.poppy.core.CommonResultResp;
-import com.j13.garen.poppy.util.BeanUtils;
+import com.j13.garen.api.req.OrderUpdateStatusReq;
+import com.j13.garen.api.resp.AdminPainterOrderGetResp;
+import com.j13.garen.api.resp.OrderAddResp;
+import com.j13.garen.api.resp.OrderGetResp;
+import com.j13.garen.api.resp.OrderListResp;
+import com.j13.poppy.core.CommonResultResp;
+import com.j13.poppy.util.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -72,14 +72,32 @@ public class AdminOrderServerManager extends BaseServerManager {
         OrderAddResp resp = JSON.parseObject(rawResponse, OrderAddResp.class);
     }
 
-    public void updateStatus(int id, int status) {
+    public void addRecord(MultipartFile file, int accountId,String orderNumber,int actionType,String remark) throws IOException {
+        // 保存到本地，做tmp
+        String fileName = System.currentTimeMillis() + ".jpg";
+        File destFile = new File(PropertiesConfiguration.getInstance().getStringValue(ConfigurationConstants.LOCAL_TMP_DIR), fileName);
+        file.transferTo(destFile);
+
+        String rawResponse = InternetUtil.post(
+                getServerUrl(),
+                RequestParams.getInstance()
+                        .add("act", "admin.painter.record.add")
+                        .add("accountId", accountId)
+                        .add("orderNumber", orderNumber)
+                        .add("actionType", actionType)
+                        .add("remark", remark), "img", destFile);
+        CommonResultResp resp = JSON.parseObject(rawResponse, CommonResultResp.class);
+    }
+
+    public CommonResultResp updateStatus(String orderNumber, int status) {
         String rawResponse = InternetUtil.post(
                 getServerUrl(),
                 RequestParams.getInstance()
                         .add("act", "order.updateStatus")
-                        .add("orderId", id)
+                        .add("orderNumber", orderNumber)
                         .add("status", status));
-        OrderUpdateStatusReq resp = JSON.parseObject(rawResponse, OrderUpdateStatusReq.class);
+        CommonResultResp resp = JSON.parseObject(rawResponse, CommonResultResp.class);
+        return resp;
     }
 
     public void delete(int id) {
@@ -89,5 +107,15 @@ public class AdminOrderServerManager extends BaseServerManager {
                         .add("act", "order.delete")
                         .add("orderId", id));
         CommonResultResp resp = JSON.parseObject(rawResponse, CommonResultResp.class);
+    }
+
+    public AdminPainterOrderGetResp get(String orderNumber) {
+        String rawResponse = InternetUtil.post(
+                getServerUrl(),
+                RequestParams.getInstance()
+                        .add("act", "admin.painter.order.get")
+                        .add("orderNumber", orderNumber));
+        AdminPainterOrderGetResp resp = JSON.parseObject(rawResponse, AdminPainterOrderGetResp.class);
+        return resp;
     }
 }

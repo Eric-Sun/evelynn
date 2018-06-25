@@ -8,12 +8,10 @@ import com.j13.evelynn.core.config.PropertiesConfiguration;
 import com.j13.evelynn.util.ImgUtil;
 import com.j13.evelynn.util.InternetUtil;
 import com.j13.evelynn.vo.OrderVO;
-import com.j13.garen.facade.req.OrderUpdateStatusReq;
-import com.j13.garen.facade.resp.OrderAddResp;
-import com.j13.garen.facade.resp.OrderGetResp;
-import com.j13.garen.facade.resp.OrderListResp;
-import com.j13.garen.poppy.core.CommonResultResp;
-import com.j13.garen.poppy.util.BeanUtils;
+import com.j13.garen.api.req.OrderUpdateStatusReq;
+import com.j13.garen.api.resp.AdminPainterOrderGetResp;
+import com.j13.garen.api.resp.AdminPainterOrderListResp;
+import com.j13.poppy.util.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,14 +34,14 @@ public class PainterOrderServerManager extends BaseServerManager {
         String rawResponse = InternetUtil.post(
                 getServerUrl(),
                 RequestParams.getInstance()
-                        .add("act", "painter.order.list")
+                        .add("act", "page.painter.order.list")
                         .add("status", status)
                         .add("pageNum", pageNum).add("sizePerPage", sizePerPage));
-        OrderListResp resp = JSON.parseObject(rawResponse, OrderListResp.class);
+        AdminPainterOrderListResp resp = JSON.parseObject(rawResponse, AdminPainterOrderListResp.class);
 
         Map<Integer, String> orderStatusMap = Constants.orderStatusMap;
         List<OrderVO> orderList = Lists.newLinkedList();
-        for (OrderGetResp r : resp.getList()) {
+        for (AdminPainterOrderGetResp r : resp.getList()) {
             OrderVO o = new OrderVO();
             BeanUtils.copyProperties(o, r);
             o.setImg(ImgUtil.getImgFullUrl(o.getImg()));
@@ -63,7 +61,7 @@ public class PainterOrderServerManager extends BaseServerManager {
         String rawResponse = InternetUtil.post(
                 getServerUrl(),
                 RequestParams.getInstance()
-                        .add("act", "painter.order.updateStatus")
+                        .add("act", "page.painter.order.updateStatus")
                         .add("orderId", id)
                         .add("status", status));
         OrderUpdateStatusReq resp = JSON.parseObject(rawResponse, OrderUpdateStatusReq.class);
