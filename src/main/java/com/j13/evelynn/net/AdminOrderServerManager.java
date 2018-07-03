@@ -55,7 +55,7 @@ public class AdminOrderServerManager extends BaseServerManager {
         return orderList;
     }
 
-    public void add(MultipartFile file, String contactMobile, String itemId, float price, int userId) throws IOException {
+    public OrderAddResp add(MultipartFile file, String itemId, float price, int userId, String remark) throws IOException {
         // 保存到本地，做tmp
         String fileName = System.currentTimeMillis() + ".jpg";
         File destFile = new File(PropertiesConfiguration.getInstance().getStringValue(ConfigurationConstants.LOCAL_TMP_DIR), fileName);
@@ -65,14 +65,15 @@ public class AdminOrderServerManager extends BaseServerManager {
                 getServerUrl(),
                 RequestParams.getInstance()
                         .add("act", "order.add")
-                        .add("contactMobile", contactMobile)
                         .add("itemId", itemId)
                         .add("finalPrice", price)
+                        .add("remark", remark)
                         .add("userId", userId), "img", destFile);
         OrderAddResp resp = JSON.parseObject(rawResponse, OrderAddResp.class);
+        return resp;
     }
 
-    public void addRecord(MultipartFile file, int accountId,String orderNumber,int actionType,String remark) throws IOException {
+    public void addRecord(MultipartFile file, int accountId, String orderNumber, int actionType, String remark) throws IOException {
         // 保存到本地，做tmp
         String fileName = System.currentTimeMillis() + ".jpg";
         File destFile = new File(PropertiesConfiguration.getInstance().getStringValue(ConfigurationConstants.LOCAL_TMP_DIR), fileName);
@@ -100,13 +101,14 @@ public class AdminOrderServerManager extends BaseServerManager {
         return resp;
     }
 
-    public void delete(int id) {
+    public CommonResultResp delete(String orderNumber) {
         String rawResponse = InternetUtil.post(
                 getServerUrl(),
                 RequestParams.getInstance()
                         .add("act", "order.delete")
-                        .add("orderId", id));
+                        .add("orderNumber", orderNumber));
         CommonResultResp resp = JSON.parseObject(rawResponse, CommonResultResp.class);
+        return resp;
     }
 
     public AdminPainterOrderGetResp get(String orderNumber) {

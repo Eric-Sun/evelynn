@@ -11,7 +11,33 @@ public class OrderVO {
     private int status;
     private String createtime;
     private String statusString;
+    private String orderNumber;
+    private int painterId;
+    private String painterName;
 
+    public int getPainterId() {
+        return painterId;
+    }
+
+    public void setPainterId(int painterId) {
+        this.painterId = painterId;
+    }
+
+    public String getPainterName() {
+        return painterName;
+    }
+
+    public void setPainterName(String painterName) {
+        this.painterName = painterName;
+    }
+
+    public String getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
+    }
 
     public String getStatusString() {
         return statusString;

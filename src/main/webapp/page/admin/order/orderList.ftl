@@ -10,7 +10,7 @@
             </div>
             <div class="box-body">
                 <button class="btn btn-info btn-sm right"
-                        onclick="javascript:location.href='/order/orderPreCreatePG'">
+                        onclick="javascript:location.href='/admin/order/orderCreatePG'">
                     创建新的订单
                 </button>
             </div>
@@ -27,17 +27,19 @@
                         <th>创建时间</th>
                         <th>更新基本信息</th>
                         <th>删除</th>
+                        <th>关联画师</th>
+
                     </tr>
                     </thead>
                     <tbody id="tb">
                     <tr v-for="(order,index) in orderList">
-                        <td>{{order.id}}</td>
+                        <td>{{order.orderNumber}}</td>
                         <td>{{order.userName}}</td>
                         <td>{{order.itemName}}</td>
                         <td>
                             <button class="btn btn-info btn-sm right"
                                     v-on:click="startThumb(index)">
-                                {{order.img}}
+                                查看图片
                             </button>
                         </td>
                         <td>{{order.statusString}}</td>
@@ -48,9 +50,18 @@
                         </td>
                         <td>
                             <button class="btn btn-info btn-sm right"
-                                    onclick="javascript:location.href='/order/orderDelete?id=${item.id}'">
+                                    v-on:click="deleteOrder(order.orderNumber)">
                                 删除
                             </button>
+                        </td>
+                        <td>
+                            <button v-if="order.painterId==-1" class="btn btn-info btn-sm right"
+                                    v-on:click="setPainter(order.orderNumber)">
+                                手动关联画师
+                            </button>
+                            <div v-else>
+                                已经指派画师
+                            </div>
                         </td>
                     </tr>
                     </tbody>
@@ -117,100 +128,194 @@
     </div>
 </div>
 
-</@layout.mainLayout>
-<!-- /.content -->
-<script type="text/javascript">
-    var modal = new Vue({
-                el: "#myModal",
-                data: {
-                    order: {},
-                    statusList: []
-                },
-                created: function () {
-                    var _self = this;
-                    $.ajax({
-                        url: "/admin/order/orderStatusList",
-                        dataType: 'json',
-                        success: function (data) {
-                            _self.statusList = data;
-                        }
-                    })
+<!-- Modal -->
+<div class="modal fade" id="setPainterModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">订单关联画师</h4>
+            </div>
+            <div class="modal-body">
+                <div class="box-body table-responsive">
+                    <table id="painterListTable" class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>画师id</th>
+                            <th>画师姓名</th>
+                            <th>创建时间</th>
+                            <th>确认关联</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tb">
+                        <tr v-for="(painter,index) in painterList">
+                            <td>{{order.orderNumber}}</td>
+                            <td>{{order.userName}}</td>
+                            <td>{{order.itemName}}</td>
+                            <td>
+                                <button class="btn btn-info btn-sm right"
+                                        v-on:click="startThumb(index)">
+                                    查看图片
+                                </button>
+                            </td>
+                            <td>{{order.statusString}}</td>
+                            <td>{{order.createtime}}</td>
+                            <td>
+                                <button class="btn btn-info btn-sm right" v-on:click="updateOrder(index)">更新
+                                </button>
+                            </td>
+                            <td>
+                                <button class="btn btn-info btn-sm right"
+                                        v-on:click="deleteOrder(order.orderNumber)">
+                                    删除
+                                </button>
+                            </td>
+                            <td>
+                                <button v-if="order.painterId==-1" class="btn btn-info btn-sm right"
+                                        v-on:click="setPainter(order.orderNumber)">
+                                    手动关联画师
+                                </button>
+                                <div v-else>
+                                    已经指派画师
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                },
-                methods: {
-                    updateStatus: function () {
-                        var orderId = this.order.id;
-                        var status = $("#statusSelector").val();
+</@layout.mainLayout>
+    <!-- /.content -->
+    <script type="text/javascript">
+        var modal = new Vue({
+                    el: "#myModal",
+                    data: {
+                        order: {},
+                        statusList: []
+                    },
+                    created: function () {
+                        var _self = this;
                         $.ajax({
-                            url: "/admin/order/orderUpdateStatus?id=" + orderId + "&status=" + status,
+                            url: "/admin/order/orderStatusList",
                             dataType: 'json',
                             success: function (data) {
-                                tb.$options.methods.reload();
+                                _self.statusList = data;
                             }
                         })
+
                     },
-                    close: function () {
-                        $("#statusSelector").val(1);
-                    }
-                }
-            })
-            ;
-
-    var thumbModal = new Vue({
-                el: "#thumbModal",
-                data: {
-                    imgUrl: ""
-                },
-                created: function () {
-                },
-                methods: {
-                    close: function () {
-                        $("#statusSelector").val(1);
-                    }
-                }
-            })
-            ;
-
-
-    var tb = new Vue({
-                el: "#tb",
-                data: {
-                    orderList: [],
-                    statusList: []
-                },
-                created: function () {
-                    var _self = this;
-                    $.ajax({
-                        url: "/admin/order/orderList",
-                        dataType: 'json',
-                        success: function (data) {
-                            _self.orderList = data.orderList;
+                    methods: {
+                        updateStatus: function () {
+                            var orderId = this.order.id;
+                            var status = $("#statusSelector").val();
+                            $.ajax({
+                                url: "/admin/order/orderUpdateStatus?id=" + orderId + "&status=" + status,
+                                dataType: 'json',
+                                success: function (data) {
+                                    tb.$options.methods.reload();
+                                }
+                            })
+                        },
+                        close: function () {
+                            $("#statusSelector").val(1);
                         }
-                    })
+                    }
+                })
+                ;
 
-                },
-                methods: {
-                    updateOrder: function (index) {
-                        modal.$data.order = this.orderList[index];
-                        $('#myModal').modal();
+        var thumbModal = new Vue({
+                    el: "#thumbModal",
+                    data: {
+                        imgUrl: ""
                     },
-                    reload: function () {
+                    created: function () {
+                    },
+                    methods: {
+                        close: function () {
+                            $("#statusSelector").val(1);
+                        }
+                    }
+                })
+                ;
+
+        var painterListTable = new Vue({
+            el: "#painterListTable",
+            data: {
+                painterList: []
+            },
+            created: function () {
+            },
+            methods: {
+                loadPainterList: function () {
+
+
+                }
+            }
+        });
+
+
+        var tb = new Vue({
+                    el: "#tb",
+                    data: {
+                        orderList: [],
+                        statusList: []
+                    },
+                    created: function () {
+                        var _self = this;
                         $.ajax({
                             url: "/admin/order/orderList",
                             dataType: 'json',
                             success: function (data) {
-                                tb.$data.orderList = data.orderList;
+                                _self.orderList = data.orderList;
                             }
                         })
+
                     },
-                    startThumb: function (index) {
-                        thumbModal.$data.imgUrl = this.orderList[index].img;
-                        $('#thumbModal').modal();
+                    methods: {
+                        updateOrder: function (index) {
+                            modal.$data.order = this.orderList[index];
+                            $('#myModal').modal();
+                        },
+                        reload: function () {
+                            $.ajax({
+                                url: "/admin/order/orderList",
+                                dataType: 'json',
+                                success: function (data) {
+                                    tb.$data.orderList = data.orderList;
+                                }
+                            })
+                        },
+                        startThumb: function (index) {
+                            thumbModal.$data.imgUrl = this.orderList[index].img;
+                            $('#thumbModal').modal();
+                        },
+                        deleteOrder: function (orderNumber) {
+                            var _self = this;
+                            $.ajax({
+                                url: "/admin/order/orderDelete",
+                                data: {"orderNumber": orderNumber},
+                                success: function () {
+                                    alert("删除订单成功");
+                                    for (var i = 0; i < _self.orderList.length; i++) {
+                                        if (_self.orderList[i].orderNumber == orderNumber) {
+                                            _self.orderList.splice(i, 1);
+                                        }
+                                    }
+                                }
+                            });
+                        },
+                        setPainter: function (orderNumber) {
+                            $('#setPainterModal').modal();
+                            painterListTable.$options.methods.loadPainterList();
+                        }
+
                     }
-
-                }
-            })
-            ;
+                })
+                ;
 
 
-</script>
+    </script>

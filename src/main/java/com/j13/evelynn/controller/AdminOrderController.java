@@ -9,6 +9,8 @@ import com.j13.evelynn.core.config.PropertiesConfiguration;
 import com.j13.evelynn.net.AdminOrderServerManager;
 import com.j13.evelynn.vo.OrderStatusVO;
 import com.j13.evelynn.vo.OrderVO;
+import com.j13.garen.api.resp.OrderAddResp;
+import com.j13.poppy.core.CommonResultResp;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -36,8 +38,8 @@ public class AdminOrderController {
     AdminOrderServerManager adminOrderServerManager;
 
     @RequestMapping("/orderList")
-     @ResponseBody
-     public String orderList(HttpServletRequest request) {
+    @ResponseBody
+    public String orderList(HttpServletRequest request) {
         Map<String, Object> model = Maps.newHashMap();
         int pageNum = 0;
         if (request.getParameter("pageNum") != null)
@@ -96,20 +98,21 @@ public class AdminOrderController {
     }
 
     @RequestMapping("/orderCreate")
+    @ResponseBody
     public String orderCreate(@RequestParam(value = "img", required = false) MultipartFile file,
-                              HttpServletRequest request, Map<String, Object> model) throws IOException {
-        String contactMobile = request.getParameter("contactMobile");
+                              HttpServletRequest request) throws IOException {
         String itemId = request.getParameter("itemId");
         float price = new Float(request.getParameter("finalPrice"));
-        adminOrderServerManager.add(file, contactMobile, itemId, price, 0);
-        return "/admin/order/orderList";
+        String remark = request.getParameter("remark");
+        OrderAddResp resp = adminOrderServerManager.add(file, itemId, price, 0, remark);
+        return JSON.toJSONString(resp);
     }
 
-
     @RequestMapping("/orderDelete")
-    public String orderDelete(HttpServletRequest request, Map<String, Object> model) {
-        int id = new Integer(request.getParameter("id"));
-        adminOrderServerManager.delete(id);
-        return "/admin/order/orderList";
+    @ResponseBody
+    public String orderDelete(HttpServletRequest request) {
+        String orderNumber = request.getParameter("orderNumber");
+        CommonResultResp resp = adminOrderServerManager.delete(orderNumber);
+        return JSON.toJSONString(resp);
     }
 }
