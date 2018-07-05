@@ -10,6 +10,7 @@ import com.j13.evelynn.net.AdminOrderServerManager;
 import com.j13.evelynn.vo.OrderStatusVO;
 import com.j13.evelynn.vo.OrderVO;
 import com.j13.garen.api.resp.OrderAddResp;
+import com.j13.garen.api.resp.PainterListResp;
 import com.j13.poppy.core.CommonResultResp;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,11 +109,29 @@ public class AdminOrderController {
         return JSON.toJSONString(resp);
     }
 
+
     @RequestMapping("/orderDelete")
     @ResponseBody
     public String orderDelete(HttpServletRequest request) {
         String orderNumber = request.getParameter("orderNumber");
         CommonResultResp resp = adminOrderServerManager.delete(orderNumber);
+        return JSON.toJSONString(resp);
+    }
+
+    @RequestMapping("/painterList")
+    @ResponseBody
+    public String painterList(HttpServletRequest request) {
+        PainterListResp resp = adminOrderServerManager.painterList();
+        return JSON.toJSONString(resp);
+    }
+
+
+    @RequestMapping("/setPainter")
+    @ResponseBody
+    public String setPainter(HttpServletRequest request) {
+        String orderNumber = request.getParameter("orderNumber");
+        int accountId = new Integer(request.getParameter("accountId"));
+        CommonResultResp resp = adminOrderServerManager.setPainter(orderNumber, accountId);
         return JSON.toJSONString(resp);
     }
 }

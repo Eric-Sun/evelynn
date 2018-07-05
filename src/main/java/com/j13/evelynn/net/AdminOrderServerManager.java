@@ -9,10 +9,7 @@ import com.j13.evelynn.util.ImgUtil;
 import com.j13.evelynn.util.InternetUtil;
 import com.j13.evelynn.vo.OrderVO;
 import com.j13.garen.api.req.OrderUpdateStatusReq;
-import com.j13.garen.api.resp.AdminPainterOrderGetResp;
-import com.j13.garen.api.resp.OrderAddResp;
-import com.j13.garen.api.resp.OrderGetResp;
-import com.j13.garen.api.resp.OrderListResp;
+import com.j13.garen.api.resp.*;
 import com.j13.poppy.core.CommonResultResp;
 import com.j13.poppy.util.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -118,6 +115,28 @@ public class AdminOrderServerManager extends BaseServerManager {
                         .add("act", "admin.painter.order.get")
                         .add("orderNumber", orderNumber));
         AdminPainterOrderGetResp resp = JSON.parseObject(rawResponse, AdminPainterOrderGetResp.class);
+        return resp;
+    }
+
+    public PainterListResp painterList() {
+        String rawResponse = InternetUtil.post(
+                getServerUrl(),
+                RequestParams.getInstance()
+                        .add("act", "painter.list")
+                        .add("sizePerPage", 10)
+                        .add("pageNum", 0));
+        PainterListResp resp = JSON.parseObject(rawResponse, PainterListResp.class);
+        return resp;
+    }
+
+    public CommonResultResp setPainter(String orderNumber, int accountId) {
+        String rawResponse = InternetUtil.post(
+                getServerUrl(),
+                RequestParams.getInstance()
+                        .add("act", "order.setPainter")
+                        .add("accountId", accountId)
+                        .add("orderNumber", orderNumber));
+        CommonResultResp resp = JSON.parseObject(rawResponse, CommonResultResp.class);
         return resp;
     }
 }

@@ -144,41 +144,18 @@
                         <tr>
                             <th>画师id</th>
                             <th>画师姓名</th>
-                            <th>创建时间</th>
                             <th>确认关联</th>
                         </tr>
                         </thead>
-                        <tbody id="tb">
+                        <tbody>
                         <tr v-for="(painter,index) in painterList">
-                            <td>{{order.orderNumber}}</td>
-                            <td>{{order.userName}}</td>
-                            <td>{{order.itemName}}</td>
+                            <td>{{painter.accountId}}</td>
+                            <td>{{painter.realName}}</td>
                             <td>
                                 <button class="btn btn-info btn-sm right"
-                                        v-on:click="startThumb(index)">
-                                    查看图片
-                                </button>
-                            </td>
-                            <td>{{order.statusString}}</td>
-                            <td>{{order.createtime}}</td>
-                            <td>
-                                <button class="btn btn-info btn-sm right" v-on:click="updateOrder(index)">更新
-                                </button>
-                            </td>
-                            <td>
-                                <button class="btn btn-info btn-sm right"
-                                        v-on:click="deleteOrder(order.orderNumber)">
-                                    删除
-                                </button>
-                            </td>
-                            <td>
-                                <button v-if="order.painterId==-1" class="btn btn-info btn-sm right"
-                                        v-on:click="setPainter(order.orderNumber)">
+                                        v-on:click="doSetPainter(painter.accountId)">
                                     手动关联画师
                                 </button>
-                                <div v-else>
-                                    已经指派画师
-                                </div>
                             </td>
                         </tr>
                         </tbody>
@@ -245,14 +222,33 @@
         var painterListTable = new Vue({
             el: "#painterListTable",
             data: {
-                painterList: []
+                painterList: [],
+                orderNumber: 0
             },
             created: function () {
             },
             methods: {
-                loadPainterList: function () {
-
-
+                loadPainterList: function (orderNumber) {
+                    var _self = this;
+                    $.ajax({
+                        url: "/admin/order/painterList",
+                        data: {},
+                        dataType: "json",
+                        success: function (data) {
+                            Vue.set(painterListTable, "painterList", data.list);
+                            Vue.set(painterListTable, "orderNumber", orderNumber);
+                        }
+                    });
+                },
+                doSetPainter: function (accountId) {
+                    $("#setPainterModal").modal("hide");
+                    $.ajax({
+                        url: "/admin/order/setPainter",
+                        data: {orderNumber: painterListTable.orderNumber, accountId: accountId},
+                        success: function (data) {
+                            tb.reload();
+                        }
+                    });
                 }
             }
         });
@@ -310,7 +306,7 @@
                         },
                         setPainter: function (orderNumber) {
                             $('#setPainterModal').modal();
-                            painterListTable.$options.methods.loadPainterList();
+                            painterListTable.$options.methods.loadPainterList(orderNumber);
                         }
 
                     }

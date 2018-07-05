@@ -41,14 +41,14 @@ public class AdminAuthorityController {
         model.put("account", account);
         model.put("authorityList", authorityList);
 
-        return "/authority/accountDetailForUpdate";
+        return "/admin/authority/accountDetailForUpdate";
     }
 
     @RequestMapping("/accountPreCreate")
     public String preCreate(HttpServletRequest request, Map<String, Object> model) {
         List<Authority> authorityList = accountServerManager.listAuthority();
         model.put("authorityList", authorityList);
-        return "/authority/accountCreate";
+        return "/admin/authority/accountCreate";
     }
 
     @RequestMapping("/accountCreate")
@@ -63,7 +63,7 @@ public class AdminAuthorityController {
         String passwordAfterMd5 = MD5Util.getMD5String(password);
         accountServerManager.createAccount(name, passwordAfterMd5, authorityId, brief, mobile, realName);
 
-        return "redirect:/authority/accountList";
+        return "redirect:/admin/authority/accountList";
     }
 
 
@@ -77,7 +77,7 @@ public class AdminAuthorityController {
         String mobile = request.getParameter("mobile");
         String realName = request.getParameter("realName");
         accountServerManager.updateAccount(id, name, password, authorityId, brief, mobile, realName);
-        return "redirect:/authority/accountList";
+        return "redirect:/admin/authority/accountList";
     }
 
     @RequestMapping("/accountDelete")
@@ -85,7 +85,7 @@ public class AdminAuthorityController {
         int id = new Integer(request.getParameter("id"));
         accountServerManager.deleteAccount(id);
 
-        return "redirect:/authority/accountList";
+        return "redirect:/admin/authority/accountList";
     }
 
 
@@ -95,7 +95,7 @@ public class AdminAuthorityController {
     public String authorityList(HttpServletRequest request, Map<String, Object> model) {
         List<Authority> authorityList = accountServerManager.listAuthority();
         model.put("authorityList", authorityList);
-        return "/authority/authorityList";
+        return "/admin/authority/authorityList";
     }
 
 
@@ -107,7 +107,7 @@ public class AdminAuthorityController {
         List<Resource> resourceList = accountServerManager.getResourceList();
         model.put("authority", authority);
         model.put("resourceList", resourceList);
-        return "/authority/authorityDetailForUpdate";
+        return "/admin/authority/authorityDetailForUpdate";
     }
 
 
@@ -119,7 +119,7 @@ public class AdminAuthorityController {
 
 
         accountServerManager.updateAuthority(id, name, resourceIdList);
-        return "redirect:/authority/authorityList";
+        return "redirect:/admin/authority/authorityList";
     }
 
 
@@ -127,7 +127,7 @@ public class AdminAuthorityController {
     public String authorityDelete(HttpServletRequest request) {
         int id = new Integer(request.getParameter("id"));
         accountServerManager.deleteAuthority(id);
-        return "redirect:/authority/authorityList";
+        return "redirect:/admin/authority/authorityList";
     }
 
     @RequestMapping("/authorityCreate")
@@ -136,7 +136,7 @@ public class AdminAuthorityController {
         String[] resourceIdList = request.getParameterValues("resourceIdList");
 
         accountServerManager.createAuthority(name, resourceIdList);
-        return "redirect:/authority/authorityList";
+        return "redirect:/admin/authority/authorityList";
     }
 
 
@@ -147,7 +147,7 @@ public class AdminAuthorityController {
         List<Resource> resourceList = accountServerManager.getResourceList();
         model.put("resourceList", resourceList);
 
-        return "/authority/authorityCreate";
+        return "/admin/authority/authorityCreate";
     }
 
 
@@ -158,7 +158,7 @@ public class AdminAuthorityController {
 
         List<Resource> resourceList = accountServerManager.getResourceList();
         model.put("resourceList", resourceList);
-        return "/authority/resourceList";
+        return "/admin/authority/resourceList";
     }
 
 
@@ -166,7 +166,7 @@ public class AdminAuthorityController {
     public String resourceCreate(HttpServletRequest request) {
         String name = request.getParameter("name");
         accountServerManager.createResource(name);
-        return "redirect:/authority/resourceList";
+        return "redirect:/admin/authority/resourceList";
     }
 
 
@@ -175,7 +175,7 @@ public class AdminAuthorityController {
         String name = request.getParameter("name");
         int id = new Integer(request.getParameter("id"));
         accountServerManager.updateResource(id, name);
-        return "redirect:/authority/resourceList";
+        return "redirect:/admin/authority/resourceList";
     }
 
 
@@ -183,7 +183,7 @@ public class AdminAuthorityController {
     public String resourceDelete(HttpServletRequest request) {
         int id = new Integer(request.getParameter("id"));
         accountServerManager.deleteResource(id);
-        return "redirect:/authority/resourceList";
+        return "redirect:/admin/authority/resourceList";
     }
 
 
@@ -193,12 +193,12 @@ public class AdminAuthorityController {
 
         Resource resource = accountServerManager.getResource(id);
         model.put("resource", resource);
-        return "/authority/resourceDetailForUpdate";
+        return "/admin/authority/resourceDetailForUpdate";
     }
 
     @RequestMapping("/resourcePreCreate")
     public String resourcePreCreate(HttpServletRequest request) {
-        return "/authority/resourceCreate";
+        return "/admin/authority/resourceCreate";
     }
 
 

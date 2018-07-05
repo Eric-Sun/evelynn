@@ -13,7 +13,7 @@
                     </div>
                     <div class="box-body">
                         <button class="btn btn-info btn-sm right"
-                                onclick="javascript:location.href='/authority/resourcePreCreate'">
+                                onclick="javascript:location.href='/admin/authority/resourcePreCreate'">
                             创建新角色
                         </button>
                     </div>

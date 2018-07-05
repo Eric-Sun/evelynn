@@ -14,7 +14,7 @@
                     </div>
                     <div class="box-body">
                         <button class="btn btn-info btn-sm right"
-                                onclick="javascript:location.href='/authority/accountPreCreate'">
+                                onclick="javascript:location.href='/admin/authority/accountPreCreate'">
                             创建新用户
                         </button>
                     </div>
